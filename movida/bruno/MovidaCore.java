@@ -240,6 +240,7 @@ public class MovidaCore implements IMovidaDB, IMovidaConfig, IMovidaSearch, IMov
 	public void clear() {
 		movies.removeAllElements();
 		people.removeAllElements();
+		edges.clear();
 	}
 	
 	public int countMovies() {

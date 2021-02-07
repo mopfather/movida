@@ -1,0 +1,57 @@
+Relazione sul progetto movida 2020
+Team: Giuliano Bruno
+Strutture dati: ABR, ArrayOrdinato
+Algoritmi: HeapSort, SelectionSort
+
+
+Inizio parlando di come ho implementato le strutture dati e gli algoritmi.
+Ho creato una interfaccia, DataStructure<T> che viene usata dove mi serve una struttura dati generica che implementi
+tutte le operazioni rilevanti per il progetto. Si tratta di una classe parametrica, che contiene oggetti di un generico tipo T.
+Questa interfaccia viene implementata dalle due strutture che mi sono state assegnate, ABR e ArrayOrdinato.
+Ho anche implementato una versiona minimale di un Heap, necessaria per il funzionamento di HeapSort.
+
+Il primo problema da risolvere e' stato come implementare le strutture dati generiche:
+Java non permette una dichiarazione come "T[] elements;", quindi in ArrayOrdinato ho dovuto usare un array di
+Object per mantenere i miei dati. Questo comunque non viola la type safety della mia classe, poiche' l'unico modo
+per inserire oggetti al sua interno e' di utilizzare la funzione addElement, che prende solo oggetti di tipo T come parametro.
+Il secondo problema e' stato quello di ritornare l'array di tutti gli elementi contenuti nella struttura.
+Ho risolto il problema usando la stessa tecnica che viene usata nell'implementazione di ArrayList nella libreria
+standard di Java, ovvero di usare la funzione Arrays.copyOf, che ritorna un array della dimensione e del tipo che
+mi serve.
+Per quanto riguarda l'efficienza delle operazione all'interno delle strutture dati, la loro complessita' e' la seguente.
+
+Array ordinato
+getElemCount: o(1)
+addElement: o(n)
+deleteElement: o(n)
+removeAllElements: o(1)
+find: o(log(n))
+getArray: o(n)
+
+ABR
+getElemCount: o(1)
+addElement: o(log(n))
+deleteElement: o(log(n))
+removeAllElements: o(1)
+find: o(log(n))
+getArray: o(n)
+
+SelectionSort: o(n^2)
+HeapSort: o(nlog(n))
+
+
+Ho implementato le funzioni di IMovidaSearch in modo banale, scansionando l'array di tutti gli elementi del database in modo lineare, prendendo uno a uno
+gli elementi che fanno match. Per passare la condizione di matching ho usato espressioni lambda, che mi hanno permesso di mantenere il codice semplice e privo
+di ripetizioni.
+L'implementazione di LoadFromFile avviene in due parti, prima viene scansionato il file e' i film contenuti in esso vengono aggiunti ad un array temporaneo,
+dopo l'array viene passato ad una funzione ausiliaria e i film vengono aggiunti uno ad uno. Siccome le strutture dati non ammettono duplicati, sara' solo l'ultimo
+film presente nel file con lo stesso nome ad essere aggiunto al database. Salvare tutto prima in un buffer temporaneo permette di non aggiornare il database
+in case do errore, seguendo le specifiche del progetto.
+
+L'ultima decisione implementativa da discutere e' su come implementare le collaborazioni. I nodi del grafo sono rappresentati dalle persone contenute nel database,
+mentre gli archi del grafo sono implementati da una lista di liste:
+una HashMap assegna ad ogni attore, identificato unicamente dal nome, una lista di attori insieme al loro numero di collaborazioni. Ogni volta che viene aggiunto
+o rimosso un film la lista di archi viene aggiornata.
+GetDirectCollaboratorsOf(p) e' implementata resistuendo semplicemente la lista di tutti i nodi verso cui p ha un arco.
+GetTeamOf(p) e' implementata con una semplice visita in profondita'.
+MaximizeCollaborationsInTheTeamOf(p) e' implementato con l'algoritmo di Prim.
